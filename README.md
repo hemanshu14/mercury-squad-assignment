@@ -4,9 +4,12 @@ A coding challenge consisting of a spring boot application, a front end UI and s
 
 # Project setup
 
-First clone the code by using the below mentioned command
+First clone the code by using the below mentioned command:
+
 git clone https://github.com/hemanshu14/mercury-squad-assignment.git
+
 cd user-management
+
 # Run the following commands to build and run the wiremock stub image with Docker:
 # To build the docker image: 
 docker build -t wiremock-stub wire-mock
