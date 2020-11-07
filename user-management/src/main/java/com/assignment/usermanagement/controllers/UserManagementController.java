@@ -1,6 +1,8 @@
 package com.assignment.usermanagement.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,27 +35,21 @@ public class UserManagementController {
 	 * Method to retrieve the user details from the service with the provided first
 	 * name and last name
 	 * 
-	 * @param firstName first name of the user
-	 * @param lastName  last name of the user
-	 * @return {@link ResponseEntity<User>} user details
+	 * @param firstName optional first name of the user
+	 * @param lastName  optional last name of the user
+	 * @return {@link ResponseEntity<List<User>>} list of the user details
 	 * @throws UserNotFoundException
 	 */
 	@GetMapping
-	public ResponseEntity<User> getUserDataWithParams(
-			@RequestParam(value = "firstName", required = true) String firstName,
-			@RequestParam(value = "lastName", required = true) String lastName) throws UserNotFoundException {
-		return new ResponseEntity<User>(userService.getUserDataWithParams(firstName, lastName), HttpStatus.OK);
-	}
+	public ResponseEntity<List<User>> getUsersData(@RequestParam("firstName") Optional<String> firstName,
+			@RequestParam("lastName") Optional<String> lastName) throws UserNotFoundException {
 
-	/**
-	 * 
-	 * Method to retrieve details of all the users
-	 * 
-	 * @return {@link ResponseEntity<List<User>} list of all the user's details
-	 * @throws UserNotFoundException
-	 */
-	@GetMapping(path = "all")
-	public ResponseEntity<List<User>> getUsersData() throws UserNotFoundException {
-		return new ResponseEntity<List<User>>(userService.getUsersData(), HttpStatus.OK);
+		if (!firstName.isPresent() && !lastName.isPresent()) {
+			return ResponseEntity.ok(userService.getUsersData());
+		} else {
+			List<User> users = new ArrayList<>();
+			users.add(userService.getUserDataWithParams(firstName, lastName));
+			return ResponseEntity.ok(users);
+		}
 	}
 }

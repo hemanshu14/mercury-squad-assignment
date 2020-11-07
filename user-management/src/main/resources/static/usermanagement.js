@@ -20,7 +20,7 @@ var app = new Vue({
 		      }
 	}).then((response) => {
 			this.userResponse = [];
-	      this.userResponse.push(response.data);
+	      this.userResponse = response.data;
 	      console.log(this.userResponse);
 	      $('#cover-spin').hide(0);
 	      if(this.userResponse.length == 0){
@@ -52,7 +52,7 @@ var app = new Vue({
 		this.userResponse = [];
 		 this.showNotification = false;
 		$('#cover-spin').show(0);
-		axios.get('/users/all').then((response) => {
+		axios.get('/users').then((response) => {
 	      this.userResponse = response.data;
 	      console.log(this.userResponse)
 	      $('#cover-spin').hide(0);

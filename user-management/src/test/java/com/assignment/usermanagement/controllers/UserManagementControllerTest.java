@@ -1,11 +1,11 @@
 package com.assignment.usermanagement.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ public class UserManagementControllerTest {
 
 	@Test
 	public void testGetUsers() throws UserNotFoundException {
-		
+
 		List<User> users = new ArrayList<>();
 		User user1 = new User();
 		Name name1 = new Name();
@@ -47,25 +47,35 @@ public class UserManagementControllerTest {
 
 		users.add(user1);
 		users.add(user2);
-		
+
 		when(userService.getUsersData()).thenReturn(users);
-		assertEquals(2, userManagementController.getUsersData().getBody().size());
+
+		assertEquals(2, userManagementController.getUsersData(Optional.empty(), Optional.empty()).getBody().size());
 	}
 
 	@Test
 	public void testGetUsersWithParams() throws UserNotFoundException {
-		String firstName = "Karl";
-		String lastName = "Winson";
+		
+		List<User> users = new ArrayList<>();
+		User user1 = new User();
+		Name name1 = new Name();
+		name1.setFirst("Karl");
+		name1.setLast("winson");
+		user1.setGender("male");
+		user1.setName(name1);
+		
+		users.add(user1);
+		
 		User user = new User();
 		Name name = new Name();
 		name.setFirst("Karl");
 		name.setLast("Winson");
 		user.setGender("male");
 		user.setName(name);
-		when(userService.getUserDataWithParams(eq(firstName), eq(lastName))).thenReturn(user);
-		ResponseEntity<User> userResponse = userManagementController.getUserDataWithParams(firstName, lastName);
-		assertEquals(firstName, userResponse.getBody().getName().getFirst());
-		assertEquals(lastName, userResponse.getBody().getName().getLast());
+		when(userService.getUserDataWithParams(Optional.of("Karl"), Optional.of("Winson"))).thenReturn(user);
+		ResponseEntity<List<User>> userResponse = userManagementController.getUsersData(Optional.of("Karl"), Optional.of("Winson"));
+		assertEquals(name.getFirst(), userResponse.getBody().get(0).getName().getFirst());
+		assertEquals(name.getLast(), userResponse.getBody().get(0).getName().getLast());
 
 	}
 
