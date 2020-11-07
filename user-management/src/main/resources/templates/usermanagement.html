@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>User Management</title>
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js">
+	
+</script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js">
+	
+</script>
+<script src="https://unpkg.com/axios@0.17.1/dist/axios.min.js"></script>
+<style>
+#cover-spin {
+	position: fixed;
+	width: 100%;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 9999;
+	display: none;
+}
+
+@
+-webkit-keyframes spin {
+	from {-webkit-transform: rotate(0deg);
+}
+
+to {
+	-webkit-transform: rotate(360deg);
+}
+
+}
+@
+keyframes spin {
+	from {transform: rotate(0deg);
+}
+
+to {
+	transform: rotate(360deg);
+}
+
+}
+#cover-spin::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 48%;
+	top: 40%;
+	width: 40px;
+	height: 40px;
+	border-style: solid;
+	border-color: black;
+	border-top-color: transparent;
+	border-width: 4px;
+	border-radius: 50%;
+	-webkit-animation: spin .8s linear infinite;
+	animation: spin .8s linear infinite;
+}
+
+.div-table {
+	margin-top: 30px;
+	color: white;
+}
+
+#div-table div.row:nth-of-type(even) {
+	background: #ff9f64;
+}
+
+#div-table div.row:nth-of-type(odd) {
+	background: #FF6200;
+}
+</style>
+
+</head>
+<body>
+
+	<div id="index" class="container">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">User Management</h4>
+				<h6 class="card-subtitle mb-2 text-muted">Search Users</h6>
+				<div class="form-group">
+					<label>Enter First Name:</label> <input type="text"
+						class="form-control" placeholder="Please enter the first name"
+						required v-model="firstName"></input>
+				</div>
+				<div class="form-group">
+					<label>Enter Last Name:</label> <input required type="text"
+						class="form-control" placeholder="Please enter the last name"
+						v-model="lastName"></input>
+				</div>
+				<div>
+					<button :disabled="!(firstName && lastName)"
+						class="btn btn-primary mb-2" @click="getUsers(firstName,lastName)">Submit</button>
+					<button class="btn btn-primary mb-2 ml-2" @click="getAllUsers()">Get
+						All Users</button>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div v-if="showNotification" class="alert alert-warning" style="margin-top: 20px;" role="alert">No
+				Users Available!!</div>
+
+			<div v-if="showErrorNotification" class="alert alert-danger" style="margin-top: 20px;"
+				role="alert">Some Error Occurred. Please Try Again Later</div>
+
+			<div id="cover-spin"></div>
+		</div>
+
+
+		<div v-if="userResponse.length>0" id="div-table"
+			class="col-md-8 div-table">
+			<div class="row row-style">
+				<div class="col-md-1">#</div>
+				<div class="col-md-4">First Name</div>
+				<div class="col-md-4">Last Name</div>
+				<div class="col-md-3">Date of Birth</div>
+			</div>
+			<div class="row mt-2 row-style" v-if="userResponse"
+				v-for="(user, index) in userResponse">
+				<div class="col-md-1">{{index+1}}</div>
+				<div class="col-md-4">{{user.name.title}} {{user.name.first}}</div>
+				<div class="col-md-4">{{user.name.last}}</div>
+				<div class="col-md-3">{{user.name.dob}}</div>
+			</div>
+		</div>
+	</div>
+	<script src="/usermanagement.js"></script>
+</body>
+</html>
