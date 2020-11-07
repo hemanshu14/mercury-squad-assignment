@@ -19,7 +19,7 @@ import com.assignment.usermanagement.exceptions.UserNotFoundException;
  */
 
 @ControllerAdvice
-public class ExceptionHandlingController {
+public class ExceptionHandlerAdvice {
 
 	/**
 	 * Method to handle user not found exception

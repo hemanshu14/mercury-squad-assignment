@@ -13,7 +13,7 @@ import com.assignment.usermanagement.model.User;
  *
  */
 
-@FeignClient(name = "${feign.name}", url = "${wiremock.api}")
+@FeignClient(name = "${feign.name}", url = "${userdata.api}")
 public interface UserDataClient {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/")

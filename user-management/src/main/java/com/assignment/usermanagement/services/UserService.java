@@ -1,7 +1,6 @@
 package com.assignment.usermanagement.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.assignment.usermanagement.exceptions.UserNotFoundException;
 import com.assignment.usermanagement.model.User;
@@ -22,7 +21,7 @@ public interface UserService {
 	 * @return  user details matching with the first name and last name
 	 * @throws UserNotFoundException 
 	 */
-	public User getUserDataWithParams(Optional<String> firstName, Optional<String> lastName) throws UserNotFoundException;
+	public User getUserDataWithParams(String firstName, String lastName);
 	
 	
 	/**
@@ -32,6 +31,6 @@ public interface UserService {
 	 * @return list of all the users details
 	 * @throws UserNotFoundException
 	 */
-	public List<User> getUsersData() throws UserNotFoundException;
+	public List<User> getUsersData();
 
 }

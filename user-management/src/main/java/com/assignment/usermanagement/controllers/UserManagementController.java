@@ -2,10 +2,7 @@ package com.assignment.usermanagement.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +13,8 @@ import com.assignment.usermanagement.exceptions.UserNotFoundException;
 import com.assignment.usermanagement.model.User;
 import com.assignment.usermanagement.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * 
  * Controller to get all the user details
@@ -25,10 +24,10 @@ import com.assignment.usermanagement.services.UserService;
  */
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserManagementController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	/**
 	 * 
@@ -41,10 +40,10 @@ public class UserManagementController {
 	 * @throws UserNotFoundException
 	 */
 	@GetMapping
-	public ResponseEntity<List<User>> getUsersData(@RequestParam("firstName") Optional<String> firstName,
-			@RequestParam("lastName") Optional<String> lastName) throws UserNotFoundException {
+	public ResponseEntity<List<User>> getUsersData(@RequestParam(name="firstName", required = false) String firstName,
+			@RequestParam(name="lastName", required = false) String lastName) {
 
-		if (!firstName.isPresent() && !lastName.isPresent()) {
+		if (firstName == null && lastName == null) {
 			return ResponseEntity.ok(userService.getUsersData());
 		} else {
 			List<User> users = new ArrayList<>();

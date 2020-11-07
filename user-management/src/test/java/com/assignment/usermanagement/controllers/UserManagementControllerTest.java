@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +49,7 @@ public class UserManagementControllerTest {
 
 		when(userService.getUsersData()).thenReturn(users);
 
-		assertEquals(2, userManagementController.getUsersData(Optional.empty(), Optional.empty()).getBody().size());
+		assertEquals(2, userManagementController.getUsersData(null,null).getBody().size());
 	}
 
 	@Test
@@ -72,8 +71,8 @@ public class UserManagementControllerTest {
 		name.setLast("Winson");
 		user.setGender("male");
 		user.setName(name);
-		when(userService.getUserDataWithParams(Optional.of("Karl"), Optional.of("Winson"))).thenReturn(user);
-		ResponseEntity<List<User>> userResponse = userManagementController.getUsersData(Optional.of("Karl"), Optional.of("Winson"));
+		when(userService.getUserDataWithParams("Karl", "Winson")).thenReturn(user);
+		ResponseEntity<List<User>> userResponse = userManagementController.getUsersData("Karl", "Winson");
 		assertEquals(name.getFirst(), userResponse.getBody().get(0).getName().getFirst());
 		assertEquals(name.getLast(), userResponse.getBody().get(0).getName().getLast());
 

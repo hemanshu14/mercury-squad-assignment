@@ -1,6 +1,6 @@
 package com.assignment.usermanagement.exceptions;
 
-public class BaseException extends Exception {
+public class BaseException extends RuntimeException {
 
 	private static final long serialVersionUID = 6451603533119146117L;
 

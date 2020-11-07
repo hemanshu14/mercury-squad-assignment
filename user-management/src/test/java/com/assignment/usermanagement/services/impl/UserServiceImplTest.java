@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,7 +83,7 @@ public class UserServiceImplTest {
 
 		when(userDataClient.getUsersData()).thenReturn(userList);
 
-		User user = userServiceImpl.getUserDataWithParams(Optional.of("Karl"), Optional.of("Winson"));
+		User user = userServiceImpl.getUserDataWithParams("Karl", "Winson");
 		assertEquals(userList.get(0).getName().getFirst(), user.getName().getFirst());
 		assertEquals(userList.get(0).getName().getLast(), user.getName().getLast());
 	}
@@ -94,7 +93,7 @@ public class UserServiceImplTest {
 		when(userDataClient.getUsersData()).thenReturn(userList);
 
 		Throwable thrown = catchThrowable(() -> {
-			userServiceImpl.getUserDataWithParams(Optional.of("Hemanshu"), Optional.of("Banga"));
+			userServiceImpl.getUserDataWithParams("Hemanshu", "Banga");
 		});
 
 		assertThat(thrown).isInstanceOf(UserNotFoundException.class);
