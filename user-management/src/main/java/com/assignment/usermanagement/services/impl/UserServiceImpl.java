@@ -2,12 +2,12 @@ package com.assignment.usermanagement.services.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -42,14 +42,17 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public List<User> getUsersData() throws UserNotFoundException {
-		List<User> users = restTemplate
-				.exchange(wireMockStubbedApi, HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {
-				}).getBody();
-		if (users.isEmpty()) {
+
+		ResponseEntity<List<User>> userListResponse = restTemplate.exchange(wireMockStubbedApi, HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<User>>() {
+				});
+
+		List<User> userList = userListResponse.getBody();
+		if (userList.isEmpty()) {
 			throw new UserNotFoundException(Constants.ERROR_CODE, Constants.USERS_NOT_FOUND);
 		}
 
-		return users;
+		return userList;
 	}
 
 	/**
@@ -57,27 +60,26 @@ public class UserServiceImpl implements UserService {
 	 * This is the implementation of the method to retrieve the users details that
 	 * matches with the given first name and last name
 	 *
-	 * return the list of the user details that matches with the given first name
-	 * and last name
+	 * return the the user details that matches with the given first name and last
+	 * name
 	 * 
 	 * @throws UserNotFoundException
 	 */
 	@Override
-	public List<User> getUserDataWithParams(Optional<String> firstName, Optional<String> lastName)
-			throws UserNotFoundException {
+	public User getUserDataWithParams(String firstName, String lastName) throws UserNotFoundException {
 		List<User> users = restTemplate
 				.exchange(wireMockStubbedApi, HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {
 				}).getBody();
 
-		List<User> usersArray = users.stream()
-				.filter(user -> user.getName().getFirst().equalsIgnoreCase(firstName.get())
-						&& user.getName().getLast().equalsIgnoreCase(lastName.get()))
-				.collect(Collectors.toList());
+		Optional<User> user = users.stream()
+				.filter(userItem -> userItem.getName().getFirst().equalsIgnoreCase(firstName)
+						&& userItem.getName().getLast().equalsIgnoreCase(lastName))
+				.findAny();
 
-		if (usersArray.isEmpty()) {
+		if (!user.isPresent()) {
 			throw new UserNotFoundException(Constants.ERROR_CODE, Constants.USER_NOT_FOUND);
 		}
-		return usersArray;
+		return user.get();
 	}
 
 }

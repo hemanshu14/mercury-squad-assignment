@@ -1,11 +1,10 @@
 package com.assignment.usermanagement.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,29 +24,36 @@ import com.assignment.usermanagement.services.UserService;
 @RestController
 @RequestMapping("/users")
 public class UserManagementController {
-	
+
 	@Autowired
 	private UserService userService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
 
 	/**
 	 * 
-	 * Method to get the user details from the service
+	 * Method to retrieve the user details from the service with the provided first
+	 * name and last name
 	 * 
 	 * @param firstName first name of the user
-	 * @param lastName last name of the user
-	 * @return the list of the user details
-	 * @throws UserNotFoundException 
+	 * @param lastName  last name of the user
+	 * @return {@link ResponseEntity<User>} user details
+	 * @throws UserNotFoundException
 	 */
 	@GetMapping
-	public List<User> getUserData(@RequestParam("firstName") Optional<String> firstName, @RequestParam("lastName") Optional<String> lastName) throws UserNotFoundException {
-		
-		if(!firstName.isPresent() && !lastName.isPresent()) {
-			return userService.getUsersData();
-		}
-		else {
-			return userService.getUserDataWithParams(firstName, lastName);
-		}
+	public ResponseEntity<User> getUserDataWithParams(
+			@RequestParam(value = "firstName", required = true) String firstName,
+			@RequestParam(value = "lastName", required = true) String lastName) throws UserNotFoundException {
+		return new ResponseEntity<User>(userService.getUserDataWithParams(firstName, lastName), HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * Method to retrieve details of all the users
+	 * 
+	 * @return {@link ResponseEntity<List<User>} list of all the user's details
+	 * @throws UserNotFoundException
+	 */
+	@GetMapping(path = "all")
+	public ResponseEntity<List<User>> getUsersData() throws UserNotFoundException {
+		return new ResponseEntity<List<User>>(userService.getUsersData(), HttpStatus.OK);
 	}
 }
